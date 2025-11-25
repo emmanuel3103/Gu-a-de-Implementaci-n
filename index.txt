@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guía de Implementación — Sistema EDI-301</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0 1.5rem 3rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    header { text-align: center; margin: 2rem 0; }
+    h1, h2, h3, h4 { color: #222; }
+    nav {
+      background: #f5f5f5; border: 1px solid #ddd;
+      padding: 1rem; margin-bottom: 2rem;
+    }
+    nav ul { list-style: none; padding-left: 0; }
+    nav li { margin-bottom: 0.3rem; }
+    nav a { text-decoration: none; color: #0066cc; }
+    nav a:hover { text-decoration: underline; }
+    section { margin-bottom: 2rem; }
+
+    /* Tablas */
+    table {
+      width: 100%; border-collapse: collapse;
+      margin-top: 1rem; margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 8px 12px; text-align: left;
+      border: 1px solid #ccc; vertical-align: top;
+    }
+    th {
+      background-color: #f0f0f0; font-weight: bold;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    pre, code {
+      background: #f4f4f4; padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+    }
+    pre { overflow-x: auto; padding: 1rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Guía de Implementación — Sistema EDI-301</h1>
+  <p>Equipo de desarrollo EDI-301 — Universidad Linda Vista</p>
+</header>
+
+<nav>
+  <h2>Índice</h2>
+  <ul>
+    <li><a href="#sec1">1. Introducción</a>
+      <ul>
+        <li><a href="#sec1-1">1.1 Propósito</a></li>
+        <li><a href="#sec1-2">1.2 Alcance</a></li>
+        <li><a href="#sec1-3">1.3 Público objetivo</a></li>
+      </ul>
+    </li>
+
+    <li><a href="#sec2">2. Visión general de la implementación</a></li>
+
+    <li><a href="#sec3">3. Preparación (Exploración)</a>
+      <ul>
+        <li><a href="#sec3-1">3.1 Requisitos de infraestructura</a></li>
+        <li><a href="#sec3-2">3.2 Requisitos de software y cuentas</a></li>
+        <li><a href="#sec3-3">3.3 Confirmación de ambientes</a></li>
+      </ul>
+    </li>
+
+    <li><a href="#sec4">4. Instalación y configuración</a>
+      <ul>
+        <li><a href="#sec4-1">4.1 Instalación del backend</a></li>
+        <li><a href="#sec4-2">4.2 Instalación de la base de datos</a></li>
+        <li><a href="#sec4-3">4.3 Instalación de la app móvil</a></li>
+        <li><a href="#sec4-4">4.4 Configuración de entornos</a></li>
+      </ul>
+    </li>
+
+    <li><a href="#sec5">5. Implementación inicial (Piloto)</a></li>
+
+    <li><a href="#sec6">6. Implementación completa</a>
+      <ul>
+        <li><a href="#sec6-1">6.1 Criterios para pasar a producción</a></li>
+        <li><a href="#sec6-2">6.2 Despliegue a producción</a></li>
+        <li><a href="#sec6-3">6.3 Soporte posterior al despliegue</a></li>
+      </ul>
+    </li>
+
+    <li><a href="#sec7">7. Roles y responsabilidades</a></li>
+    <li><a href="#sec8">8. Gestión de riesgos</a></li>
+    <li><a href="#sec9">9. Checklists de implementación</a></li>
+  </ul>
+</nav>
+
+<!-- =========================== -->
+<!-- 1. INTRODUCCIÓN -->
+<!-- =========================== -->
+<section id="sec1">
+  <h2>1. Introducción</h2>
+
+  <section id="sec1-1">
+    <h3>1.1 Propósito</h3>
+    <p>
+      Esta Guía de Implementación describe los pasos técnicos necesarios para instalar, configurar
+      y desplegar el sistema <strong>EDI-301</strong>, incluyendo backend, base de datos y aplicación móvil.
+    </p>
+  </section>
+
+  <section id="sec1-2">
+    <h3>1.2 Alcance</h3>
+    <p>Esta guía cubre:</p>
+    <ul>
+      <li>Preparación de infraestructura.</li>
+      <li>Instalación del backend (Node.js/Express).</li>
+      <li>Creación y configuración de SQL Server.</li>
+      <li>Configuración de variables de entorno.</li>
+      <li>Compilación y despliegue de la app móvil EDI-301.</li>
+      <li>Implementación en fases (QA → piloto → producción).</li>
+    </ul>
+  </section>
+
+  <section id="sec1-3">
+    <h3>1.3 Público objetivo</h3>
+    <p>Personal de TI, administradores de sistemas, desarrolladores y equipo de soporte técnico.</p>
+  </section>
+</section>
+
+<!-- =========================== -->
+<!-- 2. VISIÓN GENERAL -->
+<!-- =========================== -->
+<section id="sec2">
+  <h2>2. Visión general de la implementación</h2>
+  <p>
+    La implementación se organiza en cuatro etapas:
+  </p>
+  <ul>
+    <li><strong>Exploración:</strong> evaluación de requisitos y compatibilidad.</li>
+    <li><strong>Instalación:</strong> preparación de servidores, BD y backend.</li>
+    <li><strong>Implementación inicial:</strong> piloto con usuarios seleccionados.</li>
+    <li><strong>Implementación completa:</strong> despliegue final para toda la comunidad EDI.</li>
+  </ul>
+</section>
+
+<!-- =========================== -->
+<!-- 3. PREPARACIÓN -->
+<!-- =========================== -->
+<section id="sec3">
+  <h2>3. Preparación (Exploración)</h2>
+
+  <section id="sec3-1">
+    <h3>3.1 Requisitos de infraestructura</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Requisitos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Servidor Backend</td>
+          <td>
+            Windows Server o Linux, Node.js 18+, 8GB RAM, 50GB de almacenamiento,
+            acceso HTTPS.
+          </td>
+        </tr>
+        <tr>
+          <td>Base de Datos</td>
+          <td>SQL Server 2017+, acceso desde backend, backups activos.</td>
+        </tr>
+        <tr>
+          <td>Estaciones de desarrollo</td>
+          <td>
+            Flutter SDK 3.x, Android Studio o Xcode, VS Code, Git.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec3-2">
+    <h3>3.2 Requisitos de software y cuentas</h3>
+    <ul>
+      <li>Acceso al repositorio GitHub de backend y app.</li>
+      <li>Credenciales de administrador SQL Server.</li>
+      <li>Certificado SSL (para despliegues HTTPS).</li>
+      <li>Usuario de servicio para backend en producción.</li>
+    </ul>
+  </section>
+
+  <section id="sec3-3">
+    <h3>3.3 Confirmación de ambientes</h3>
+    <ul>
+      <li><strong>DEV:</strong> desarrollo local.</li>
+      <li><strong>QA:</strong> pruebas internas.</li>
+      <li><strong>PROD:</strong> uso real por estudiantes y colaboradores.</li>
+    </ul>
+  </section>
+</section>
+
+<!-- =========================== -->
+<!-- 4. INSTALACIÓN Y CONFIGURACIÓN -->
+<!-- =========================== -->
+<section id="sec4">
+  <h2>4. Instalación y configuración</h2>
+
+  <!-- Backend -->
+  <section id="sec4-1">
+    <h3>4.1 Instalación del backend</h3>
+    <ol>
+      <li>Clonar repositorio:  
+        <pre>git clone &lt;url-backend&gt;</pre>
+      </li>
+      <li>Instalar dependencias:
+        <pre>npm install</pre>
+      </li>
+      <li>Configurar archivo <code>.env</code>:
+        <ul>
+          <li>DB_HOST, DB_USER, DB_PASSWORD</li>
+          <li>JWT_SECRET</li>
+          <li>STORAGE_PATH</li>
+        </ul>
+      </li>
+      <li>Probar conexión a base de datos.</li>
+      <li>Ejecutar script de creación de tablas en SQL Server.</li>
+      <li>Iniciar API:
+        <pre>npm start</pre>
+      </li>
+      <li>Configurar PM2 en producción:
+        <pre>pm2 start app.js --name "edi-backend"</pre>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Base de datos -->
+  <section id="sec4-2">
+    <h3>4.2 Instalación de la base de datos</h3>
+    <ol>
+      <li>Crear BD <strong>EDI301</strong>.</li>
+      <li>Ejecutar scripts SQL.</li>
+      <li>Crear usuario con permisos limitados.</li>
+      <li>Configurar respaldos automáticos.</li>
+    </ol>
+  </section>
+
+  <!-- App móvil -->
+  <section id="sec4-3">
+    <h3>4.3 Instalación de la app móvil</h3>
+    <ol>
+      <li>Clonar repositorio:
+        <pre>git clone &lt;url-app&gt;</pre>
+      </li>
+      <li>Instalar dependencias:
+        <pre>flutter pub get</pre>
+      </li>
+      <li>Configurar endpoint:
+        <pre>BASE_URL=https://qa.edi.ulv/api</pre>
+      </li>
+      <li>Ejecutar app:
+        <pre>flutter run</pre>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Entornos -->
+  <section id="sec4-4">
+    <h3>4.4 Configuración de entornos</h3>
+    <ul>
+      <li>Crear archivos de configuración por ambiente (DEV / QA / PROD).</li>
+      <li>Asegurar accesos permitidos en firewall.</li>
+      <li>Usar URLs de API distintas por ambiente.</li>
+    </ul>
+  </section>
+</section>
+
+<!-- =========================== -->
+<!-- 5. IMPLEMENTACIÓN INICIAL -->
+<!-- =========================== -->
+<section id="sec5">
+  <h2>5. Implementación inicial (Piloto)</h2>
+  <ol>
+    <li>Seleccionar 1–2 familias EDI para pruebas piloto.</li>
+    <li>Desplegar APK de QA a sus dispositivos.</li>
+    <li>Monitorear logs del backend.</li>
+    <li>Registrar retroalimentación y problemas detectados.</li>
+  </ol>
+</section>
+
+<!-- =========================== -->
+<!-- 6. IMPLEMENTACIÓN COMPLETA -->
+<!-- =========================== -->
+<section id="sec6">
+  <h2>6. Implementación completa</h2>
+
+  <section id="sec6-1">
+    <h3>6.1 Criterios para pasar a producción</h3>
+    <ul>
+      <li>Casos de uso principales aprobados.</li>
+      <li>Defectos críticos corregidos.</li>
+      <li>Aprobación del coordinador del programa.</li>
+    </ul>
+  </section>
+
+  <section id="sec6-2">
+    <h3>6.2 Despliegue a producción</h3>
+    <ol>
+      <li>Configurar servidor y BD igual a QA.</li>
+      <li>Actualizar variables de entorno.</li>
+      <li>Iniciar backend con PM2.</li>
+      <li>Compilar app:
+        <pre>flutter build apk --release</pre>
+      </li>
+      <li>Distribuir instalador a usuarios finales.</li>
+    </ol>
+  </section>
+
+  <section id="sec6-3">
+    <h3>6.3 Soporte posterior</h3>
+    <ul>
+      <li>Monitoreo durante 2–4 semanas.</li>
+      <li>Revisiones quincenales con coordinador.</li>
+      <li>Métricas: usuarios activos, errores, tiempos de respuesta.</li>
+    </ul>
+  </section>
+</section>
+
+<!-- =========================== -->
+<!-- 7. ROLES -->
+<!-- =========================== -->
+<section id="sec7">
+  <h2>7. Roles y responsabilidades</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rol</th>
+        <th>Responsabilidades</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Administrador de sistema</td>
+        <td>Configura servidores, BD y respaldos.</td>
+      </tr>
+      <tr>
+        <td>Desarrollador backend</td>
+        <td>Despliega API, mantiene scripts de BD.</td>
+      </tr>
+      <tr>
+        <td>Desarrollador móvil</td>
+        <td>Configura endpoints y genera builds.</td>
+      </tr>
+      <tr>
+        <td>Coordinador EDI</td>
+        <td>Valida implementación y gestiona pilotos.</td>
+      </tr>
+      <tr>
+        <td>QA</td>
+        <td>Ejecuta pruebas y valida versiones.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================== -->
+<!-- 8. RIESGOS -->
+<!-- =========================== -->
+<section id="sec8">
+  <h2>8. Gestión de riesgos</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Riesgo</th>
+        <th>Impacto</th>
+        <th>Probabilidad</th>
+        <th>Mitigación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Fallas en producción</td>
+        <td>Alto</td>
+        <td>Medio</td>
+        <td>Backups y rollback de versión.</td>
+      </tr>
+      <tr>
+        <td>Problemas de conectividad</td>
+        <td>Medio</td>
+        <td>Medio</td>
+        <td>Pruebas de red previas.</td>
+      </tr>
+      <tr>
+        <td>Dispositivos no compatibles</td>
+        <td>Bajo</td>
+        <td>Medio</td>
+        <td>Definir versiones mínimas de SO.</td>
+      </tr>
+      <tr>
+        <td>Errores en carga de imágenes</td>
+        <td>Medio</td>
+        <td>Medio</td>
+        <td>Validaciones de tamaño y formato.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =========================== -->
+<!-- 9. CHECKLISTS -->
+<!-- =========================== -->
+<section id="sec9">
+  <h2>9. Checklists de implementación</h2>
+
+  <h3>9.1 Backend</h3>
+  <ul>
+    <li>[ ] Node.js instalado.</li>
+    <li>[ ] Dependencias instaladas.</li>
+    <li>[ ] BD conectada.</li>
+    <li>[ ] Archivo .env configurado.</li>
+    <li>[ ] PM2 ejecutando servicio.</li>
+  </ul>
+
+  <h3>9.2 Aplicación móvil</h3>
+  <ul>
+    <li>[ ] Dependencias Flutter actualizadas.</li>
+    <li>[ ] Endpoints correctos por ambiente.</li>
+    <li>[ ] Login funcional.</li>
+    <li>[ ] Subida de imágenes probada.</li>
+    <li>[ ] Build de release generado.</li>
+  </ul>
+</section>
+
+</body>
+</html>
